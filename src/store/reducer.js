@@ -1,6 +1,6 @@
 const defaultState = {
-    inputValue:'123',
-    list:[1,2]
+    inputValue:'',
+    list:[]
 }
 
 //reducer可以接受state，但是不能修改state  所以需要拷贝一份state
@@ -15,6 +15,11 @@ export default (state = defaultState,action) => {
         const newState = JSON.parse(JSON.stringify(state))
         newState.list.push(newState.inputValue);
         newState.inputValue = ''
+        return newState;
+    }
+    if(action.type === 'delete_item'){
+        const newState = JSON.parse(JSON.stringify(state))
+        newState.list.splice(action.index,1)
         return newState;
     }
     return state;
