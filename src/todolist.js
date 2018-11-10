@@ -1,8 +1,10 @@
 import React,{Component} from 'react'
 import 'antd/dist/antd.css'
 import store from './store'
-import {CHANGE_INPUT_VALUE,ADD_TODO_ITEM,DELETE_ITEM} from './store/actionTypes.js'
+import {getInputChangeAction,getItemAction,getdeleteItemAction,initListAction } from './store/actionCreators'
+//import {CHANGE_INPUT_VALUE,ADD_TODO_ITEM,DELETE_ITEM} from './store/actionTypes.js'
 import TodoListUI from './TodoListUI'
+import axios from 'axios'
 
 export default class TodoList extends Component{
     constructor(props){
@@ -14,10 +16,11 @@ export default class TodoList extends Component{
     }
 
     handleInputChange = (e) => {
-        const action = {
-            type:CHANGE_INPUT_VALUE,
-            value:e.target.value
-        }
+        // const action = {
+        //     type:CHANGE_INPUT_VALUE,
+        //     value:e.target.value
+        // }
+        const action = getInputChangeAction(e.target.value)
         store.dispatch(action);
     }
 
@@ -27,18 +30,30 @@ export default class TodoList extends Component{
     }
 
     handleAddList = () => {
-        const action = {
-            type: ADD_TODO_ITEM
-        }
+        // const action = {
+        //     type: ADD_TODO_ITEM
+        // }
+        const action = getItemAction()
         store.dispatch(action)
     }
 
     handleItemDelete = (index) => {
-        const action = {
-            type:DELETE_ITEM,
-            index
-        }
+        // const action = {
+        //     type:DELETE_ITEM,
+        //     index
+        // }
+        const action = getdeleteItemAction(index)
         store.dispatch(action)
+    }
+
+    componentDidMount(){
+        axios.get('/list.json').then((res) => {
+            console.log(res)
+            const data = res.data
+            const action = initListAction(data)
+            console.log(action)
+            store.dispatch(action)
+        })
     }
 
     render(){
